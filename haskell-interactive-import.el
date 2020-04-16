@@ -38,7 +38,7 @@
 ;; (use-package haskell-interactive-import
 ;;   :ensure nil
 ;;   :load-path "~/.emacs.d/local"
-;;   :init (add-hook 'haskell-mode-hook 'haskell-interactive-import))
+;;   :init (add-hook 'haskell-mode-hook 'haskell-interactive-import-mode))
 
 ;;; Code:
 
@@ -49,7 +49,7 @@
 (defhydra hydra-haskell-interactive-import (:hint nil)
   "Add Import"
   ("i" haskell-navigate-imports-go "Next import group")
-  ("RET" haskell-interactive-import--complete-and-sort "Import here")
+  ("RET" exit-recursive-edit "Import here")
   ("q" nil "Quit"))
 
 ;;;###autoload
@@ -58,21 +58,19 @@
   (interactive)
   (atomic-change-group
     (save-excursion
-      (hydra-haskell-interactive-import/body))))
-
-(defun haskell-interactive-import--complete-and-sort ()
-  "At the current point, use eacl to complete an import."
-  (interactive)
-  (insert "\n")
-  (forward-line -1)
-  (insert "import ")
-  (eacl-complete-line)
-  (haskell-sort-imports))
+      (haskell-navigate-imports-go)
+      (call-interactively #'hydra-haskell-interactive-import/body)
+      (recursive-edit)
+      (insert "\n")
+      (forward-line -1)
+      (insert "import ")
+      (eacl-complete-line)
+      (haskell-sort-imports))))
 
 (defvar haskell-interactive-import-map
   (let ((map (make-sparse-keymap)))
     (set-keymap-parent map haskell-mode-map)
-    (define-key map (kbd "C-c i") #'haskell-interactive-import--complete-and-sort)
+    (define-key map (kbd "C-c i") #'haskell-interactive-import-begin)
     map)
   "Keymap for Haskell mode hydras.")
 
