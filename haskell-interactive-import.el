@@ -63,6 +63,8 @@
 (defun haskell-interactive-import--complete-and-sort ()
   "At the current point, use eacl to complete an import."
   (interactive)
+  (insert "\n")
+  (forward-line -1)
   (insert "import ")
   (eacl-complete-line)
   (haskell-sort-imports))
