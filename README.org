@@ -1,0 +1,8 @@
+* Overview
+This package adds an interactive command, ~haskell-interactive-import-begin~, which allows the user to interactively select an import group to which a new import will be added.  Currently, the import is chosen using [[https://github.com/redguardtoo/eacl][eacl]].  Imports in the chosen group are sorted after the import is added.
+
+The function returns the point to the original location before the function was executed.  It also cleans up any buffer modifications if the interaction is aborted.
+
+* Future improvements
+
+- Add other hydra entries for adding imports not based on completion
