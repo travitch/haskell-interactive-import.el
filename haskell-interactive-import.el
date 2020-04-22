@@ -46,11 +46,21 @@
 (require 'haskell-mode)
 (require 'eacl)
 
-(defhydra hydra-haskell-interactive-import (:hint nil)
+;; The formulation of this hydra tries to be a bit careful: we want to make sure
+;; that canceling out of the hydra should correctly trigger the save-excursion
+;; and atomic-change-group macros.
+;;
+;; This hydra uses :foreign-keys warn to make sure that hitting keys not in the
+;; hydra don't cleanly exit the hydra (which would break those guard macros).
+;; This means that hitting a key not in one of the hydra heads doesn't break out
+;; of the hydra.
+(defhydra hydra-haskell-interactive-import (:hint nil
+                                            :foreign-keys warn)
   "Add Import"
   ("i" haskell-navigate-imports-go "Next import group")
   ("RET" exit-recursive-edit "Import here")
-  ("q" nil "Quit"))
+  ("C-g" abort-recursive-edit "Cancel")
+  ("q" abort-recursive-edit "Cancel"))
 
 ;;;###autoload
 (defun haskell-interactive-import-begin ()
