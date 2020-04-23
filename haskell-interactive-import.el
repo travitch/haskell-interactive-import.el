@@ -58,7 +58,7 @@
                                             :foreign-keys warn)
   "Add Import"
   ("i" haskell-navigate-imports-go "Next import group")
-  ("RET" exit-recursive-edit "Import here")
+  ("RET" exit-recursive-edit "Import here" :exit t)
   ("C-g" abort-recursive-edit "Cancel")
   ("q" abort-recursive-edit "Cancel"))
 
